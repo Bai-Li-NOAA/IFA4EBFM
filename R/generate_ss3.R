@@ -265,32 +265,32 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     Nsamp = sa_data$fishery$om_sample_number[as.character(year_id)]
   )
   agecomp <- cbind(agecomp, sa_data$fishery$obs_caa_prop$fleet1[as.character(year_id), ])
-  ss3_data$agecomp <- agecomp
+  # ss3_data$agecomp <- agecomp
 
-  # survey_agecomp <- list()
-  # for (i in survey_id) {
-  #   year <- as.numeric(row.names(na.omit(sa_data$survey$obs_lencomp_num_ss3[[i]])))
-  #   year_id <- year[year %in% model_year]
-  #   if (length(year_id) == 0) {
-  #     survey_agecomp[[i]] <- NA
-  #   } else {
-  #     survey_agecomp[[i]] <- data.frame(
-  #       Yr = year_id,
-  #       Seas = unique(sa_data$survey$om_baa[[i]]$month),
-  #       FltSvy = i + 1,
-  #       Gender = 0,
-  #       Part = 0,
-  #       Ageerr = 1,
-  #       Lbin_lo = -1,
-  #       Lbin_hi = -1,
-  #       Nsamp = sa_data$survey$om_sample_number[[i]][as.character(year_id)]
-  #     )
-  #     survey_agecomp[[i]] <- cbind(survey_agecomp[[i]], sa_data$survey$obs_survey_agecomp_prop[[i]][as.character(year_id), ])
-  #   }
-  # }
-  # survey_agecomp_data <- do.call(rbind, survey_agecomp)
-  #
-  # ss3_data$agecomp <- rbind(agecomp, survey_agecomp_data)
+  survey_agecomp <- list()
+  for (i in survey_id) {
+    year <- as.numeric(row.names(na.omit(sa_data$survey$obs_lencomp_num_ss3[[i]])))
+    year_id <- year[year %in% model_year]
+    if (length(year_id) == 0) {
+      survey_agecomp[[i]] <- NA
+    } else {
+      survey_agecomp[[i]] <- data.frame(
+        Yr = year_id,
+        Seas = unique(sa_data$survey$om_baa[[i]]$month),
+        FltSvy = i + 1,
+        Gender = 0,
+        Part = 0,
+        Ageerr = 1,
+        Lbin_lo = -1,
+        Lbin_hi = -1,
+        Nsamp = sa_data$survey$om_sample_number[[i]][as.character(year_id)]
+      )
+      survey_agecomp[[i]] <- cbind(survey_agecomp[[i]], sa_data$survey$obs_survey_agecomp_prop[[i]][as.character(year_id), ])
+    }
+  }
+  survey_agecomp_data <- do.call(rbind, survey_agecomp)
+
+  ss3_data$agecomp <- rbind(agecomp, survey_agecomp_data)
 
 
   ss3_data$use_MeanSize_at_Age_obs <-
@@ -486,6 +486,13 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     Special = 0
   )
 
+  # ss3_ctl$age_selex_types <- data.frame(
+  #   Pattern = c(19, 19, 0),
+  #   Discard = 0,
+  #   Male = 0,
+  #   Special = 0
+  # )
+
   if (length(survey_id) == 4){
     ss3_ctl$age_selex_types <- data.frame(
       Pattern = c(19, 12, 19, 19, 11),
@@ -517,7 +524,8 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, -2, 2, 2, 2),
+      # PHASE = c(2, 2, -2, 2, 2, 2),
+      PHASE = c(2, 2, -2, 2, 2, -2),
       # PHASE = c(2, 2, 2, 2, 2, 2),
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
@@ -531,7 +539,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, 2, 2, 2, 2),
+      PHASE = c(2, 2, -2, -2, 2, 2),
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     ),
@@ -544,7 +552,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, 2, 2, 2, 2),
+      PHASE = c(2, 2, -2, 2, 2, 2),
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     )
